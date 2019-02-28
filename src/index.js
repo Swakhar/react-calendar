@@ -3,20 +3,26 @@ import ReactDOM from "react-dom";
 import dateFns from "date-fns";
 
 import "./styles.css";
+import booking_icon from './booking_icon.png'
 
 class Calendar extends React.Component {
-  state = {
-    currentMonth: new Date(),
-    selectedDate: new Date()
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentMonth: new Date(),
+      selectedDate: new Date(),
+      bookingDays: [],
+    };
+  }
 
   renderHeader() {
     const dateFormat = "MMMM YYYY";
 
     return (
       <div className="header row flex-middle">
-        <div className="col col-start">
-          <div className="icon" onClick={this.prevMonth}>
+        <div className="col col-start" onClick={this.prevMonth}>
+          <div className="icon">
             chevron_left
           </div>
         </div>
@@ -24,7 +30,9 @@ class Calendar extends React.Component {
           <span>{dateFns.format(this.state.currentMonth, dateFormat)}</span>
         </div>
         <div className="col col-end" onClick={this.nextMonth}>
-          <div className="icon">chevron_right</div>
+          <div className="icon">
+            chevron_right
+          </div>
         </div>
       </div>
     );
@@ -73,12 +81,18 @@ class Calendar extends React.Component {
                 : dateFns.isSameDay(day, selectedDate)
                 ? "selected"
                 : ""
-            }`}
+            } ${this.state.bookingDays.includes(cloneDay.toDateString()) ? 'booked' : 'not_booked'}`}
             key={day}
             onClick={() => this.onDateClick(dateFns.parse(cloneDay))}
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
+            {dateFns.isSameMonth(day, monthStart) &&
+             !this.state.bookingDays.includes(cloneDay.toDateString()) &&
+              <a onClick={() => this.onBookingClick(cloneDay)}>
+                <img src={booking_icon} />
+              </a>
+            }
           </div>
         );
         day = dateFns.addDays(day, 1);
@@ -96,6 +110,12 @@ class Calendar extends React.Component {
   onDateClick = day => {
     this.setState({
       selectedDate: day
+    });
+  };
+
+  onBookingClick = day => {
+    this.setState({
+      bookingDays: this.state.bookingDays.concat(day.toDateString())
     });
   };
 

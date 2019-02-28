@@ -182,6 +182,10 @@ main {
   border-image-slice: 1;
 }
 
+.calendar .body .booked {
+  background: green;
+}
+
 .calendar .body .row {
   border-bottom: 1px solid var(--border-color);
 }
@@ -231,4 +235,9 @@ main {
   flex-grow: 0;
   flex-basis: calc(100% / 7);
   width: calc(100% / 7);
+}
+
+img {
+  height: 50px;
+  width: 50px;
 }
